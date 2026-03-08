@@ -1,0 +1,18 @@
+{
+  "name": "amber-sync-worker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "migrate": "wrangler d1 execute amber-sync --file=migrations/0001_init.sql"
+  },
+  "dependencies": {
+    "hono": "^4.6.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241230.0",
+    "typescript": "^5.7.0",
+    "wrangler": "^3.100.0"
+  }
+}

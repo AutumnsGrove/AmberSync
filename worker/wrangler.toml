@@ -1,0 +1,33 @@
+# Amber Sync Worker
+# Cloudflare Worker for Obsidian vault synchronization.
+# Uses D1 for manifest (sync state) and R2 for file storage.
+
+name = "amber-sync"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# ─── R2: File Storage ───────────────────────────────────────────
+# Stores the actual vault files. Separate bucket from grove-storage.
+
+[[r2_buckets]]
+binding = "SYNC_BUCKET"
+bucket_name = "amber-sync"
+
+# ─── D1: Manifest + Sync State ─────────────────────────────────
+# Single source of truth for what the vault looks like.
+# Every device reads this to determine what to upload/download.
+
+[[d1_databases]]
+binding = "DB"
+database_name = "amber-sync"
+database_id = "TODO_REPLACE_AFTER_D1_CREATE"
+
+# ─── Secrets (set via `wrangler secret put`) ────────────────────
+# SYNC_API_KEY — API key the plugin sends in X-Sync-Key header
+#
+# To set:
+#   wrangler secret put SYNC_API_KEY
+#
+# Later (productization): swap for Warden challenge-response auth.
+# The Worker auth middleware swaps out; routes stay the same.

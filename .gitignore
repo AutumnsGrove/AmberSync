@@ -1,4 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build output
+worker/dist/
+plugin/main.js
+plugin/main.js.map
+
+# Secrets
 secrets.json
-*.log
-__pycache__/
+.env
+.env.*
+.dev.vars
+
+# OS
 .DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Wrangler
+.wrangler/
+
+# Logs
+*.log
+
+# Template files (remove after setup)
+README-base.md
