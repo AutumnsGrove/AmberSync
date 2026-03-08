@@ -1,0 +1,7 @@
+# Root build artifacts - ignore these
+/gf
+/*.exe
+
+# But DO commit pre-built binaries in dist/
+!/dist/
+!/dist/**

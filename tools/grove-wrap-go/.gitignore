@@ -1,0 +1,11 @@
+# Built binary
+gw
+gw.exe
+
+# But DO commit pre-built binaries in dist/
+!/dist/
+!/dist/**
+
+# Go build cache
+*.test
+*.out
