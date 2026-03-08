@@ -5,6 +5,7 @@ import {
   type AmberSyncSettings,
 } from "./settings";
 import { WorkerTransport } from "./sync/transport";
+import { sync } from "./sync/engine";
 import { SyncStatusBar } from "./ui/status-bar";
 import {
   notifyConfigNeeded,
@@ -70,17 +71,26 @@ export default class AmberSyncPlugin extends Plugin {
     );
 
     try {
-      // Sync engine will be wired in Phase 3
-      // For now, verify connectivity by fetching the manifest
-      const manifest = await transport.getManifest();
-      const uploaded = 0;
-      const downloaded = 0;
+      const result = await sync(
+        this.app.vault,
+        transport,
+        this.settings.deviceId,
+        this.settings.excludes,
+      );
 
-      this.statusBar.setSynced(uploaded, downloaded);
-      notifySyncResult(uploaded, downloaded);
+      this.statusBar.setSynced(result.uploaded, result.downloaded);
+      notifySyncResult(result.uploaded, result.downloaded);
+
+      if (result.conflicts > 0) {
+        notifyConflicts(result.conflicts);
+      }
+
+      if (result.errors.length > 0) {
+        console.warn("[amber-sync] Sync completed with errors:", result.errors);
+      }
 
       console.log(
-        `[amber-sync] Connected. Remote has ${manifest.length} files.`,
+        `[amber-sync] Sync complete: ↑${result.uploaded} ↓${result.downloaded} ⚡${result.conflicts} 🗑${result.deleted}`,
       );
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
